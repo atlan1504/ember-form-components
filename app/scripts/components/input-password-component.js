@@ -1,4 +1,5 @@
-EmberFormComponents.InputPasswordComponent = Ember.Component.extend({
+EmberFormComponents.InputPasswordComponent = Ember.Component.extend(
+    EmberFormComponents.ActionOnEnter, {
   value: '',
   score: 0,
   progressWidth: function () {

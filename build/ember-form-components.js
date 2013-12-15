@@ -1,4 +1,4 @@
-/*! ember-form-components 2013-12-15 09:50:39 https://github.com/garth/ember-form-components */
+/*! ember-form-components 2013-12-15 10:38:35 https://github.com/garth/ember-form-components */
 EmberFormComponents = EmberFC = Ember.Namespace.create();
 
 EmberFormComponents.Focusable = Ember.Mixin.create({
@@ -20,11 +20,13 @@ EmberFormComponents.Focusable = Ember.Mixin.create({
 EmberFormComponents.AsyncValidation = Ember.Mixin.create({
   label: '',
   value: '',
+  disableValidation: false,
+  
   statusClass: function () {
-    if (this.get('validating')) {
+    if (!this.get('disableValidation') && this.get('validating')) {
       return 'has-warning';
     }
-    else if (this.get('showFieldValidation') || this.get('formController.showFieldValidation')) {
+    else if (!this.get('disableValidation') && (this.get('showFieldValidation') || this.get('formController.showFieldValidation'))) {
       return this.get('isValid') ? 'has-success' : 'has-error';
     }
     else {
@@ -99,8 +101,17 @@ EmberFormComponents.AsyncValidation = Ember.Mixin.create({
   }
 });
 
+
+EmberFormComponents.ActionOnEnter = Ember.Mixin.create({
+  keyPress: function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      this.sendAction('enter');
+    }
+  }
+});
 EmberFormComponents.InputTextComponent = Ember.Component.extend(
-    EmberFormComponents.Focusable, EmberFormComponents.AsyncValidation, {
+    EmberFormComponents.Focusable, EmberFormComponents.AsyncValidation, EmberFormComponents.ActionOnEnter, {
   classNames: ['form-group'],
   type: 'text',
   placeholder: '',
@@ -178,7 +189,8 @@ EmberFormComponents.InputEmailComponent = EmberFormComponents.InputTextComponent
   }
 });
 
-EmberFormComponents.InputPasswordComponent = Ember.Component.extend({
+EmberFormComponents.InputPasswordComponent = Ember.Component.extend(
+    EmberFormComponents.ActionOnEnter, {
   value: '',
   score: 0,
   progressWidth: function () {

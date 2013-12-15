@@ -17,11 +17,13 @@ EmberFormComponents.Focusable = Ember.Mixin.create({
 EmberFormComponents.AsyncValidation = Ember.Mixin.create({
   label: '',
   value: '',
+  disableValidation: false,
+  
   statusClass: function () {
-    if (this.get('validating')) {
+    if (!this.get('disableValidation') && this.get('validating')) {
       return 'has-warning';
     }
-    else if (this.get('showFieldValidation') || this.get('formController.showFieldValidation')) {
+    else if (!this.get('disableValidation') && (this.get('showFieldValidation') || this.get('formController.showFieldValidation'))) {
       return this.get('isValid') ? 'has-success' : 'has-error';
     }
     else {
@@ -93,5 +95,15 @@ EmberFormComponents.AsyncValidation = Ember.Mixin.create({
   // base validation function, if we get this far then the field is valid
   validate: function (value, status) {
     status(true, '');
+  }
+});
+
+
+EmberFormComponents.ActionOnEnter = Ember.Mixin.create({
+  keyPress: function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      this.sendAction('enter');
+    }
   }
 });

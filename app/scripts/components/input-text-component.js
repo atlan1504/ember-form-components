@@ -1,5 +1,5 @@
 EmberFormComponents.InputTextComponent = Ember.Component.extend(
-    EmberFormComponents.Focusable, EmberFormComponents.AsyncValidation, {
+    EmberFormComponents.Focusable, EmberFormComponents.AsyncValidation, EmberFormComponents.ActionOnEnter, {
   classNames: ['form-group'],
   type: 'text',
   placeholder: '',
